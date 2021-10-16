@@ -18,4 +18,11 @@ public class FriendMapper {
 		model.setUsername(friendDTO.getUsername());
 		return model;
     }
+
+    public static FriendDTO _toDTO(Friend model) {
+        FriendDTO dto = new FriendDTO();
+        dto.setId(model.getId());
+        dto.setUsername(model.getUsername());
+        return dto;
+    }
 }

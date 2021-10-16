@@ -19,4 +19,5 @@ public class Post implements Serializable {
 	private int totalLike;
 	private boolean isActive;
 	private long user_id;
+	private String userName;
 }

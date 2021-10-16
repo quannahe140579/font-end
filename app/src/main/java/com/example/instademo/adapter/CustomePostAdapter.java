@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instademo.R;
-import com.example.instademo.dto.PostDTO;
 import com.example.instademo.model.Post;
 
 import java.util.List;
@@ -58,6 +57,9 @@ public class CustomePostAdapter extends RecyclerView.Adapter<CustomePostAdapter.
 
             TextView tvViewAll = holder.tvViewAll;
             tvViewAll.setText("View all " + post.getListComment().size() + " comments ");
+
+            TextView tvUsername = holder.tvUsername;
+            tvUsername.setText(post.getUserName());
         }
 
     }
@@ -72,7 +74,7 @@ public class CustomePostAdapter extends RecyclerView.Adapter<CustomePostAdapter.
 
     public class PostViewHolder extends RecyclerView.ViewHolder{
         ImageView imgProfile, imgPostImage, imgLike, imgComment, imgSave;
-        TextView tvTotalLike, tvPublisher, tvContent, tvViewAll;
+        TextView tvTotalLike, tvPublisher, tvContent, tvViewAll, tvUsername;
 
         public PostViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +89,7 @@ public class CustomePostAdapter extends RecyclerView.Adapter<CustomePostAdapter.
             tvPublisher = itemView.findViewById(R.id.txtPublisher);
             tvContent = itemView.findViewById(R.id.txtDes);
             tvViewAll = itemView.findViewById(R.id.txtComment);
+            tvUsername = itemView.findViewById(R.id.tvUserName);
         }
     }
 

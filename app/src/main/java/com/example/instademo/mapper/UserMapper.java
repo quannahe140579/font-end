@@ -62,4 +62,56 @@ public class UserMapper {
         }
         return listPost;
     }
+
+    public static UserDTO _toDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setCreatedDate(user.getCreatedDate());
+        dto.setActive(user.isActive());
+        dto.setPassword(user.getPassword());
+        dto.setUsername(user.getUsername());
+        dto.setAddress(user.getAddress());
+        dto.setAvatar(user.getAvatar());
+        dto.setDateOfBirth(user.getDateOfBirth());
+        dto.setFullName(user.getFullName());
+        dto.setPhone(user.getPhone());
+
+        dto.setListPos(_toListPostDTO(user.getListPos()));
+        dto.setListFriend(_toListFriendDTO(user.getListFriend()));
+        dto.setListAnnounce(_toListAnnounceDTO(user.getListAnnounce()));
+        return dto;
+    }
+
+    private static List<FriendDTO> _toListFriendDTO(List<Friend> listFriend) {
+        List<FriendDTO> listPost = new ArrayList<>();
+        if (listFriend != null) {
+            for (Friend friendDTO : listFriend
+            ) {
+                listPost.add(FriendMapper._toDTO(friendDTO));
+            }
+        }
+        return listPost;
+    }
+
+    private static List<AnnounceDTO> _toListAnnounceDTO(List<Announce> listAnnounce) {
+        List<AnnounceDTO> listAnnounceDTO = new ArrayList<>();
+        if (listAnnounce != null) {
+            for (Announce model : listAnnounce) {
+                listAnnounceDTO.add(AnnounceMapper._toDTO(model));
+            }
+        }
+        return listAnnounceDTO;
+    }
+
+    private static List<PostDTO> _toListPostDTO(List<Post> listPos) {
+        List<PostDTO> listPost = new ArrayList<>();
+        if (listPos != null) {
+            for (Post post : listPos
+            ) {
+                listPost.add(PostMapper._toDTO(post));
+            }
+        }
+        return listPost;
+    }
+
 }

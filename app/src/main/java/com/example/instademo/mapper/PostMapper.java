@@ -36,6 +36,8 @@ public class PostMapper {
         model.setListComment(_toListComment(dto.getListComment()));
         model.setListImage(_toListImage(dto.getListImage()));
         model.setUser_id(dto.getUser_id());
+        model.setUserName(dto.getUserName());
+        model.setTotalLike(dto.getTotalLike());
         return model;
     }
 
@@ -60,5 +62,51 @@ public class PostMapper {
         }
 
         return listImage;
+    }
+
+    public static List<Post> _toListModel(List<PostDTO> listDTO) {
+        List<Post> listResult = new ArrayList<>();
+        for (PostDTO dtp: listDTO
+             ) {
+            listResult.add(_toModel(dtp));
+        }
+        return listResult;
+    }
+
+    public static PostDTO _toDTO(Post post) {
+        PostDTO dto = new PostDTO();
+        dto.setActive(post.isActive());
+        dto.setContent(post.getContent());
+        dto.setCreatedDate(post.getCreatedDate());
+        dto.setId(post.getId());
+        dto.setListComment(_toListCommentDTO(post.getListComment()));
+        dto.setListImage(_toListImageDTO(post.getListImage()));
+        dto.setUser_id(post.getUser_id());
+        dto.setUserName(post.getUserName());
+        dto.setTotalLike(post.getTotalLike());
+        return dto;
+    }
+
+    private static List<ImageDTO> _toListImageDTO(List<Image> listImage) {
+        List<ImageDTO> listImageDTO = new ArrayList<>();
+        if (listImage != null) {
+            for (Image i : listImage
+            ) {
+                listImageDTO.add(ImageMapper._toDTO(i));
+            }
+        }
+
+        return listImageDTO;
+    }
+
+    private static List<CommentDTO> _toListCommentDTO(List<Comment> listComment) {
+        List<CommentDTO> listCommentDTO = new ArrayList<>();
+        if (listComment != null) {
+            for (Comment c : listComment
+            ) {
+                listCommentDTO.add(CommentMapper._toDTO(c));
+            }
+        }
+        return listCommentDTO;
     }
 }

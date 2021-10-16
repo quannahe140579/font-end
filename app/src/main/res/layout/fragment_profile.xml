@@ -22,7 +22,7 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:id="@+id/username"
+                    android:id="@+id/etAddress"
                     android:layout_width="90dp"
                     android:layout_height="36dp"
                     android:maxLines="1"

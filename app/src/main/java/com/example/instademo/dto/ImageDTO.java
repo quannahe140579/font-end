@@ -6,6 +6,5 @@ import lombok.Data;
 public class ImageDTO {
 	private long id;
 	private String name;
-	private String data;
 	private long post_id;
 }

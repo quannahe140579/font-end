@@ -18,6 +18,16 @@ public class CommentMapper {
 		model.setId(dto.getId());
 		model.setPost_id(dto.getPost_id());
 		model.setContent(dto.getContent());
+		model.setFriendName(dto.getFriendName());
 		return model;
+    }
+
+    public static CommentDTO _toDTO(Comment c) {
+		CommentDTO dto = new CommentDTO();
+		dto.setId(c.getId());
+		dto.setPost_id(c.getPost_id());
+		dto.setContent(c.getContent());
+		dto.setFriendName(c.getFriendName());
+		return dto;
     }
 }

@@ -57,37 +57,52 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 LoginForm form = new LoginForm(username, password);
+                readUser();
+                if(userDTO != null){
+                    Intent intent = new Intent(LoginActivity.this,EditProfileActivity.class);
+                    User u = UserMapper._toModel(userDTO);
+                    User u1 = u;
+                    //intent.putExtra("u",u1);
+                    startActivity(intent);
+                }
 
-                ApiService.apiService.getUser(form).enqueue(new Callback<UserDTO>() {
-                    @Override
-                    public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
-                        userDTO = response.body();
-
-                        if (userDTO != null) {
-
-                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                            User u = UserMapper._toModel(userDTO);
-                            intent.putExtra("user", u);
-                            startActivity(intent);
-                            return;
-                        }
-                        Toast.makeText(LoginActivity.this, "Incorrect account, please input again !", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<UserDTO> call, Throwable t) {
-                        Toast.makeText(LoginActivity.this, "Error to connect !", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                });
-
-
-
-
+//                ApiService.apiService.getUser(form).enqueue(new Callback<UserDTO>() {
+//                    @Override
+//                    public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+//                        userDTO = response.body();
+//                        if (userDTO != null) {
+//                            saveToDB();
+//                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+//                            User u = UserMapper._toModel(userDTO);
+//                            intent.putExtra("user", u);
+//                            startActivity(intent);
+//                            return;
+//                        }
+//                        Toast.makeText(LoginActivity.this, "Incorrect account, please input again !", Toast.LENGTH_SHORT).show();
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<UserDTO> call, Throwable t) {
+//                        Toast.makeText(LoginActivity.this, "Incorrect account, please input again !", Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                });
             }
         });
     }
-
-
-
+    private void saveToDB(){
+        Gson gson = new Gson();
+        SharedPreferences sharedPreferences = getSharedPreferences("users",MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("user", gson.toJson(userDTO));
+        editor.commit();
+    }
+    private void readUser(){
+        Gson gson = new Gson();
+        SharedPreferences sharedPreferences = getSharedPreferences("users",MODE_PRIVATE);
+        String data = sharedPreferences.getString("user","");
+        if(!"".equals(data)){
+            userDTO = gson.fromJson(data,UserDTO.class);
+        }
+    }
 }

@@ -22,4 +22,14 @@ public class AnnounceMapper {
 		model.setUser_id(dto.getUser_id());
 		return model;
 	}
+
+    public static AnnounceDTO _toDTO(Announce model) {
+		AnnounceDTO dto = new AnnounceDTO();
+		dto.setId(model.getId());
+		dto.setTitle(model.getTitle());
+		dto.setPost_id(model.getPost_id());
+		dto.setFriend_id(model.getFriend_id());
+		dto.setUser_id(model.getUser_id());
+		return dto;
+    }
 }

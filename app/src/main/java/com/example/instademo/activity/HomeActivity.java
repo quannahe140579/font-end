@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.FrameLayout;
 
@@ -15,8 +16,10 @@ import com.example.instademo.Fragment.ProfileFragment;
 import com.example.instademo.Fragment.SearchFragment;
 import com.example.instademo.R;
 import com.example.instademo.dto.UserDTO;
+import com.example.instademo.mapper.UserMapper;
 import com.example.instademo.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.gson.Gson;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -41,10 +44,12 @@ public class HomeActivity extends AppCompatActivity {
         initComponent();
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
 
-        transaction.add(R.id.fragment_container,new HomeFragment()).commit();
 
-        Intent intent = getIntent();
-        user = (User) intent.getSerializableExtra("user");
+
+//        Intent intent = getIntent();
+//        user = (User) intent.getSerializableExtra("u");
+        readUser();
+        transaction.add(R.id.fragment_container, new HomeFragment()).commit();
     }
 
     private void initComponent() {
@@ -59,13 +64,24 @@ public class HomeActivity extends AppCompatActivity {
 
         mainLayout = findViewById(R.id.fragment_container);
     }
-    private void replaceFragment(Fragment fragment){
+
+    private void replaceFragment(Fragment fragment) {
         transaction = manager.beginTransaction();
-        transaction.replace(R.id.fragment_container,fragment);
+        transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
-    public User getUser(){
+    private void readUser(){
+        Gson gson = new Gson();
+        SharedPreferences sharedPreferences = getSharedPreferences("users",MODE_PRIVATE);
+        String data = sharedPreferences.getString("user","");
+        if(!"".equals(data)){
+            UserDTO userDTO = gson.fromJson(data,UserDTO.class);
+            user = UserMapper._toModel(userDTO);
+        }
+    }
+
+    public User getUser() {
         return this.user;
     }
 

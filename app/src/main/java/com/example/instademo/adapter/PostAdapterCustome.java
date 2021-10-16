@@ -16,11 +16,13 @@ import com.example.instademo.MainActivity;
 import com.example.instademo.R;
 import com.example.instademo.model.Post;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class PostAdapterCustome extends BaseAdapter {
     private Activity activity;
     private List<Post> listPost;
+    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
     public PostAdapterCustome(Activity activity, List<Post> listPost) {
         this.activity = activity;
@@ -62,7 +64,7 @@ public class PostAdapterCustome extends BaseAdapter {
             viewHolder.imgComment = convertView.findViewById(R.id.img_comment);
             viewHolder.imgSave = convertView.findViewById(R.id.img_save);
             viewHolder.tvDate = convertView.findViewById(R.id.txtDate);
-
+            viewHolder.tvUsername = convertView.findViewById(R.id.tvUserName);
 
             convertView.setTag(viewHolder);
         }else{
@@ -73,10 +75,17 @@ public class PostAdapterCustome extends BaseAdapter {
         viewHolder.imgProfile.setImageResource(R.drawable.naq);
         viewHolder.imgPostImage.setImageResource(R.drawable.naq);
         viewHolder.tvContent.setText(post.getContent());
-        viewHolder.tvComment.setText("Dep trai qua b oi");
+        if(post.getListComment() != null){
+            if(post.getListComment().size() > 0){
+                viewHolder.tvComment.setText(post.getListComment().get(0).getContent());
+                viewHolder.tvPublisher.setText(post.getListComment().get(0).getFriendName());
+            }
+        }
+
         viewHolder.tvTotalLike.setText(post.getTotalLike() + "");
-        viewHolder.tvPublisher.setText("User " + post.getUser_id() + "");
-        viewHolder.tvDate.setText(post.getCreatedDate().toString());
+
+        viewHolder.tvDate.setText(sdf.format(post.getCreatedDate()));
+        viewHolder.tvUsername.setText(post.getUserName());
         viewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -112,7 +121,7 @@ public class PostAdapterCustome extends BaseAdapter {
 
     private static class ViewHolder{
         ImageView imgProfile, imgPostImage, imgLike, imgComment, imgSave;
-        TextView tvTotalLike, tvPublisher, tvContent, tvComment, tvDate;
+        TextView tvTotalLike, tvPublisher, tvContent, tvComment, tvDate, tvUsername;
     }
     private void _clickImgLike(){
         Log.i("Img","Clicked");
