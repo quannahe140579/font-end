@@ -20,4 +20,5 @@ public class Post implements Serializable {
 	private boolean isActive;
 	private long user_id;
 	private String userName;
+	private String urlAvt;
 }

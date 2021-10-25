@@ -66,7 +66,6 @@ public class EditProfileActivity extends AppCompatActivity {
         if(user != null){
             // filll data
             fillData();
-
         }
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -94,7 +93,7 @@ public class EditProfileActivity extends AppCompatActivity {
         etPhone.setText(user.getPhone());
         etAddress.setText(user.getAddress());
         etBirthDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(user.getDateOfBirth()));
-        Picasso.with(EditProfileActivity.this).load("http://192.168.1.5:8080/naq11.jpg")
+        Picasso.with(EditProfileActivity.this).load("http://192.168.1.5:8080/uploads/naq11.jpg")
                 .placeholder(R.mipmap.ic_launcher).error(R.drawable.img_default)
                 .into(imgAvt);
     }

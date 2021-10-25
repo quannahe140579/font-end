@@ -18,6 +18,7 @@ import com.example.instademo.R;
 import com.example.instademo.dto.UserDTO;
 import com.example.instademo.mapper.UserMapper;
 import com.example.instademo.model.User;
+import com.example.instademo.utils.LogedUser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
@@ -43,11 +44,6 @@ public class HomeActivity extends AppCompatActivity {
 
         initComponent();
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-
-
-
-//        Intent intent = getIntent();
-//        user = (User) intent.getSerializableExtra("u");
         readUser();
         transaction.add(R.id.fragment_container, new HomeFragment()).commit();
     }
@@ -72,12 +68,8 @@ public class HomeActivity extends AppCompatActivity {
         transaction.commit();
     }
     private void readUser(){
-        Gson gson = new Gson();
-        SharedPreferences sharedPreferences = getSharedPreferences("users",MODE_PRIVATE);
-        String data = sharedPreferences.getString("user","");
-        if(!"".equals(data)){
-            UserDTO userDTO = gson.fromJson(data,UserDTO.class);
-            user = UserMapper._toModel(userDTO);
+        if(LogedUser.logedUser != null){
+            user = LogedUser.logedUser;
         }
     }
 

@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment {
     private String mParam2;
 
     public HomeFragment() {
-        // Required empty public constructor
+
     }
 
     public static HomeFragment newInstance(String param1, String param2) {
@@ -76,7 +76,6 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getAllPost();
-
     }
     public void getAllPost(){
         ApiService.apiService.getAllPost(user.getId()).enqueue(new Callback<List<PostDTO>>() {

@@ -20,6 +20,7 @@ import com.example.instademo.dto.UserDTO;
 import com.example.instademo.mapper.UserMapper;
 import com.example.instademo.model.LoginForm;
 import com.example.instademo.model.User;
+import com.example.instademo.utils.LogedUser;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity {
     private ImageView imgShowPass;
     private Button btnLogin;
     private UserDTO userDTO;
+    LogedUser logedUser = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +48,6 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-
                 String username = edUserName.getText().toString();
                 String password = edPassword.getText().toString();
 
@@ -57,52 +57,28 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 LoginForm form = new LoginForm(username, password);
-                readUser();
-                if(userDTO != null){
-                    Intent intent = new Intent(LoginActivity.this,EditProfileActivity.class);
-                    User u = UserMapper._toModel(userDTO);
-                    User u1 = u;
-                    //intent.putExtra("u",u1);
-                    startActivity(intent);
-                }
+                ApiService.apiService.getUser(form).enqueue(new Callback<UserDTO>() {
+                    @Override
+                    public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                        userDTO = response.body();
+                        if (userDTO != null) {
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            User u = UserMapper._toModel(userDTO);
+                            logedUser = new LogedUser(u);
+                            startActivity(intent);
+                            return;
+                        }
+                        Toast.makeText(LoginActivity.this, "Incorrect account, please input again !", Toast.LENGTH_SHORT).show();
+                    }
 
-//                ApiService.apiService.getUser(form).enqueue(new Callback<UserDTO>() {
-//                    @Override
-//                    public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
-//                        userDTO = response.body();
-//                        if (userDTO != null) {
-//                            saveToDB();
-//                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-//                            User u = UserMapper._toModel(userDTO);
-//                            intent.putExtra("user", u);
-//                            startActivity(intent);
-//                            return;
-//                        }
-//                        Toast.makeText(LoginActivity.this, "Incorrect account, please input again !", Toast.LENGTH_SHORT).show();
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<UserDTO> call, Throwable t) {
-//                        Toast.makeText(LoginActivity.this, "Incorrect account, please input again !", Toast.LENGTH_SHORT).show();
-//                        return;
-//                    }
-//                });
+                    @Override
+                    public void onFailure(Call<UserDTO> call, Throwable t) {
+                        Toast.makeText(LoginActivity.this, "Incorrect account, please input again !", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                });
             }
         });
     }
-    private void saveToDB(){
-        Gson gson = new Gson();
-        SharedPreferences sharedPreferences = getSharedPreferences("users",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user", gson.toJson(userDTO));
-        editor.commit();
-    }
-    private void readUser(){
-        Gson gson = new Gson();
-        SharedPreferences sharedPreferences = getSharedPreferences("users",MODE_PRIVATE);
-        String data = sharedPreferences.getString("user","");
-        if(!"".equals(data)){
-            userDTO = gson.fromJson(data,UserDTO.class);
-        }
-    }
+
 }

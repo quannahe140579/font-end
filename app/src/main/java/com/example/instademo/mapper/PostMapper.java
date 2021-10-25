@@ -38,6 +38,7 @@ public class PostMapper {
         model.setUser_id(dto.getUser_id());
         model.setUserName(dto.getUserName());
         model.setTotalLike(dto.getTotalLike());
+        model.setUrlAvt(dto.getUrlAvt());
         return model;
     }
 
@@ -84,6 +85,7 @@ public class PostMapper {
         dto.setUser_id(post.getUser_id());
         dto.setUserName(post.getUserName());
         dto.setTotalLike(post.getTotalLike());
+        dto.setUrlAvt(post.getUrlAvt());
         return dto;
     }
 
