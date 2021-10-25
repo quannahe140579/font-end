@@ -40,8 +40,6 @@
         android:layout_marginStart="46dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="5dp"
-        android:layout_marginBottom="27dp"
-        app:layout_constraintBottom_toTopOf="@+id/txtPublisher"
         app:layout_constraintEnd_toStartOf="@+id/txtTotalLike"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,28 +54,12 @@
 
         android:layout_marginTop="14dp"
         android:layout_marginEnd="68dp"
-        android:layout_marginBottom="33dp"
         android:text="comment"
         android:textColor="@color/black"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/txtComment"
         app:layout_constraintEnd_toStartOf="@+id/img_save"
         app:layout_constraintStart_toEndOf="@+id/img_comment"
         app:layout_constraintTop_toBottomOf="@+id/img_post1" />
-
-    <TextView
-        android:id="@+id/txtPublisher"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="44dp"
-        android:layout_marginBottom="10dp"
-        android:text="huonggwf"
-        android:textColor="@color/black"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/txtComment"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/img_like" />
 
     <ImageView
         android:id="@+id/img_comment"
@@ -86,26 +68,9 @@
         android:layout_marginStart="19dp"
         android:layout_marginTop="10dp"
         android:src="@drawable/ic_comment"
-        app:layout_constraintBottom_toTopOf="@+id/txtComment"
         app:layout_constraintEnd_toStartOf="@+id/txtc"
         app:layout_constraintStart_toEndOf="@+id/txtTotalLike"
         app:layout_constraintTop_toBottomOf="@+id/img_post1" />
-
-    <TextView
-        android:id="@+id/txtComment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="154dp"
-        android:layout_marginBottom="13dp"
-        android:text="View All 20 Comments"
-        android:textColor="@color/gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/txtPublisher"
-        app:layout_constraintTop_toBottomOf="@+id/img_comment"
-        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
         android:id="@+id/txtTotalLike"
@@ -114,11 +79,9 @@
 
         android:layout_marginTop="14dp"
         android:layout_marginEnd="18dp"
-        android:layout_marginBottom="33dp"
         android:text="123 likes"
         android:textColor="@color/black"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/txtPublisher"
         app:layout_constraintEnd_toStartOf="@+id/img_comment"
         app:layout_constraintStart_toEndOf="@+id/img_like"
         app:layout_constraintTop_toBottomOf="@+id/img_post1" />
@@ -127,11 +90,9 @@
         android:id="@+id/img_save"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="39dp"
-        android:layout_marginBottom="82dp"
         android:src="@drawable/ic_save"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txtc"
         app:layout_constraintTop_toBottomOf="@+id/img_post1" />
@@ -196,5 +157,56 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/img_profile" />
+
+    <TextView
+        android:id="@+id/tvViewall"
+        android:layout_width="239dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="46dp"
+        android:layout_marginEnd="124dp"
+        android:layout_marginBottom="30dp"
+        android:text="@string/view_all_comment"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etInputComment" />
+
+    <ListView
+        android:id="@+id/rc_comment"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvViewall"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <EditText
+        android:id="@+id/etInputComment"
+        android:layout_width="217dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="46dp"
+        android:ems="10"
+        android:hint="What do you thing ?"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/tvViewall"
+        app:layout_constraintEnd_toStartOf="@+id/imgOk"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_like" />
+
+    <ImageView
+        android:id="@+id/imgOk"
+        android:layout_width="48dp"
+        android:layout_height="33dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="82dp"
+        app:layout_constraintBottom_toTopOf="@+id/tvViewall"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/etInputComment"
+        app:layout_constraintTop_toBottomOf="@+id/img_like"
+        app:layout_constraintVertical_bias="0.439"
+        tools:srcCompat="@drawable/ic_send_pink" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -9,8 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instademo.MainActivity;
 import com.example.instademo.R;
@@ -62,16 +66,16 @@ public class PostAdapterCustome extends BaseAdapter {
 
             viewHolder.imgProfile = convertView.findViewById(R.id.img_profile);
             viewHolder.imgPostImage = convertView.findViewById(R.id.img_post1);
-            viewHolder.tvContent = convertView.findViewById(R.id.txtDes);
-            viewHolder.tvComment = convertView.findViewById(R.id.txtComment);
             viewHolder.imgLike = convertView.findViewById(R.id.img_like);
             viewHolder.imgLike.setTag(R.id.img_like);
             viewHolder.tvTotalLike = convertView.findViewById(R.id.txtTotalLike);
-            viewHolder.tvPublisher = convertView.findViewById(R.id.txtPublisher);
             viewHolder.imgComment = convertView.findViewById(R.id.img_comment);
             viewHolder.imgSave = convertView.findViewById(R.id.img_save);
             viewHolder.tvDate = convertView.findViewById(R.id.txtDate);
             viewHolder.tvUsername = convertView.findViewById(R.id.tvUserName);
+            viewHolder.tvViewAll = convertView.findViewById(R.id.tvViewall);
+            viewHolder.tvViewAll.setTag("NON_CLICK");
+            viewHolder.lvComment = convertView.findViewById(R.id.rc_comment);
 
             convertView.setTag(viewHolder);
         }else{
@@ -92,13 +96,6 @@ public class PostAdapterCustome extends BaseAdapter {
                 .error(R.drawable.img_default)
                 .into(viewHolder.imgPostImage);
 
-        viewHolder.tvContent.setText(post.getContent());
-        if(post.getListComment() != null){
-            if(post.getListComment().size() > 0){
-                viewHolder.tvComment.setText(post.getListComment().get(0).getContent());
-                viewHolder.tvPublisher.setText(post.getListComment().get(0).getFriendName());
-            }
-        }
 
         viewHolder.tvTotalLike.setText(post.getTotalLike() + "");
 
@@ -116,21 +113,20 @@ public class PostAdapterCustome extends BaseAdapter {
 
             }
         });
-        viewHolder.imgSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-            }
-        });
-        viewHolder.tvComment.setOnClickListener(new View.OnClickListener() {
+        viewHolder.tvViewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-            }
-        });
-        viewHolder.tvPublisher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                if(viewHolder.tvViewAll.getTag().equals("NON_CLICK")){
+                    if(post.getListComment() != null){
+                        CommentAdapterLv adapter = new CommentAdapterLv(activity,post.getListComment());
+                        viewHolder.lvComment.setAdapter(adapter);
+                        viewHolder.tvViewAll.setTag("CLICKED");
+                    }
+                }else{
+                    viewHolder.lvComment.setAdapter(null);
+                    viewHolder.tvViewAll.setTag("NON_CLICK");
+                }
 
             }
         });
@@ -139,7 +135,8 @@ public class PostAdapterCustome extends BaseAdapter {
 
     private static class ViewHolder{
         ImageView imgProfile, imgPostImage, imgLike, imgComment, imgSave;
-        TextView tvTotalLike, tvPublisher, tvContent, tvComment, tvDate, tvUsername;
+        TextView tvTotalLike, tvComment, tvDate, tvUsername, tvViewAll;
+        ListView lvComment;
     }
     private void _clickImgLike(long postId, ImageView imgLike, TextView tvLike){
         int id_imageLike = ((int)imgLike.getTag());

@@ -25,4 +25,5 @@
     <string name="birthdate">Birth Date</string>
     <string name="phone">Phone</string>
     <string name="save">Save</string>
+    <string name="view_all_comment">View all comments</string>
 </resources>
