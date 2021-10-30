@@ -20,6 +20,7 @@ import com.example.instademo.dto.PostDTO;
 import com.example.instademo.mapper.PostMapper;
 import com.example.instademo.model.Post;
 import com.example.instademo.model.User;
+import com.example.instademo.utils.LogedUser;
 
 import java.util.List;
 
@@ -31,15 +32,11 @@ public class HomeFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private User user;
     private PostAdapterCustome adapter;
     private ListView lvPost;
-    List<Post> listPost;
 
     private String mParam1;
     private String mParam2;
-
     public HomeFragment() {
 
     }
@@ -60,8 +57,6 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        HomeActivity activity = (HomeActivity) getActivity();
-        user = activity.getUser();
     }
 
     @Override
@@ -77,14 +72,15 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         getAllPost();
     }
+
     public void getAllPost(){
-        ApiService.apiService.getAllPost(user.getId()).enqueue(new Callback<List<PostDTO>>() {
+        ApiService.apiService.getAllPost(LogedUser.logedUser.getId()).enqueue(new Callback<List<PostDTO>>() {
             @Override
             public void onResponse(Call<List<PostDTO>> call, Response<List<PostDTO>> response) {
                 List<PostDTO> listDTO = response.body();
                 if(listDTO != null){
-                    listPost = PostMapper._toListModel(listDTO);
-                    adapter = new PostAdapterCustome(getActivity(),listPost);
+                    LogedUser.listPost = PostMapper._toListModel(listDTO);
+                    adapter = new PostAdapterCustome(getActivity(),LogedUser.listPost);
                     lvPost.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
                 }

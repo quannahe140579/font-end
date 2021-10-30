@@ -14,4 +14,6 @@ public class Announce implements Serializable {
 	private long user_id;
 	private long post_id;
 	private long friend_id;
+	private String urlAvt;
+	private String friendName;
 }

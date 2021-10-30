@@ -6,4 +6,6 @@ import lombok.Data;
 public class FriendDTO {
 	private long id;
 	private String username;
+	private String urlAvt;
+	private String fullName;
 }

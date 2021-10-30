@@ -20,7 +20,9 @@ import com.example.instademo.dto.UserDTO;
 import com.example.instademo.mapper.UserMapper;
 import com.example.instademo.model.LoginForm;
 import com.example.instademo.model.User;
+import com.example.instademo.utils.ErrorMessage;
 import com.example.instademo.utils.LogedUser;
+import com.example.instademo.utils.Validation;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -48,14 +50,13 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String username = edUserName.getText().toString();
-                String password = edPassword.getText().toString();
-
-                if (username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Please input account !", Toast.LENGTH_SHORT).show();
+                String username = edUserName.getText().toString().trim();
+                String password = edPassword.getText().toString().trim();
+                String result = Validation.validateLoginInputs(username,password);
+                if(!"".equals(result)){
+                    Toast.makeText(LoginActivity.this, result, Toast.LENGTH_SHORT).show();
                     return;
                 }
-
                 LoginForm form = new LoginForm(username, password);
                 ApiService.apiService.getUser(form).enqueue(new Callback<UserDTO>() {
                     @Override
@@ -65,6 +66,7 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                             User u = UserMapper._toModel(userDTO);
                             logedUser = new LogedUser(u);
+                            LogedUser.listPost = null;
                             startActivity(intent);
                             return;
                         }
@@ -73,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<UserDTO> call, Throwable t) {
-                        Toast.makeText(LoginActivity.this, "Incorrect account, please input again !", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, ErrorMessage.ERROR_SERVICE_CONNECT, Toast.LENGTH_SHORT).show();
                         return;
                     }
                 });

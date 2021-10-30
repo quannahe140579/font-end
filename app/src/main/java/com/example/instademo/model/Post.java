@@ -21,4 +21,5 @@ public class Post implements Serializable {
 	private long user_id;
 	private String userName;
 	private String urlAvt;
+	private byte[] byteAvt;
 }

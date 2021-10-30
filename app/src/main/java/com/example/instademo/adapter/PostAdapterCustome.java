@@ -2,6 +2,7 @@ package com.example.instademo.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,8 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.instademo.MainActivity;
 import com.example.instademo.R;
+import com.example.instademo.activity.CommentActivity;
 import com.example.instademo.api.ApiService;
+import com.example.instademo.model.Announce;
 import com.example.instademo.model.Post;
+import com.example.instademo.utils.LocalConst;
+import com.example.instademo.utils.LogedUser;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -73,9 +78,7 @@ public class PostAdapterCustome extends BaseAdapter {
             viewHolder.imgSave = convertView.findViewById(R.id.img_save);
             viewHolder.tvDate = convertView.findViewById(R.id.txtDate);
             viewHolder.tvUsername = convertView.findViewById(R.id.tvUserName);
-            viewHolder.tvViewAll = convertView.findViewById(R.id.tvViewall);
-            viewHolder.tvViewAll.setTag("NON_CLICK");
-            viewHolder.lvComment = convertView.findViewById(R.id.rc_comment);
+            viewHolder.tvDes = convertView.findViewById(R.id.txtDes);
 
             convertView.setTag(viewHolder);
         }else{
@@ -85,13 +88,13 @@ public class PostAdapterCustome extends BaseAdapter {
 
         viewHolder.imgProfile.setImageResource(R.drawable.naq);
 
-        Picasso.with(activity).load("http://192.168.1.5:8080/uploads/" + post.getUrlAvt())
+        Picasso.with(activity).load(LocalConst.URL + "/uploads/" + post.getUrlAvt())
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.drawable.img_default)
                 .into(viewHolder.imgProfile);
 
         viewHolder.imgPostImage.setImageResource(R.drawable.naq);
-        Picasso.with(activity).load("http://192.168.1.5:8080/uploads/" + post.getListImage().get(0).getName())
+        Picasso.with(activity).load(LocalConst.URL + "/uploads/" + post.getListImage().get(0).getName())
                 .placeholder(R.mipmap.ic_launcher)
                 .error(R.drawable.img_default)
                 .into(viewHolder.imgPostImage);
@@ -101,42 +104,44 @@ public class PostAdapterCustome extends BaseAdapter {
 
         viewHolder.tvDate.setText(sdf.format(post.getCreatedDate()));
         viewHolder.tvUsername.setText(post.getUserName());
+        viewHolder.tvDes.setText(post.getContent());
         viewHolder.imgLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 _clickImgLike(post.getId(), viewHolder.imgLike, viewHolder.tvTotalLike);
+                Announce announce = new Announce();
+                announce.setTitle(LogedUser.logedUser.getUsername() + " da thich anh cua ban");
+                announce.setUser_id(post.getUser_id());
+                announce.setFriend_id(LogedUser.logedUser.getId());
+                announce.setPost_id(post.getId());
+                ApiService.apiService.sendAnnouce(announce).enqueue(new Callback() {
+                    @Override
+                    public void onResponse(Call call, Response response) {
+
+                    }
+
+                    @Override
+                    public void onFailure(Call call, Throwable t) {
+
+                    }
+                });
             }
         });
         viewHolder.imgComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(activity, CommentActivity.class);
+                intent.putExtra("id",post.getId());
+                activity.startActivity(intent);
             }
         });
 
-        viewHolder.tvViewAll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(viewHolder.tvViewAll.getTag().equals("NON_CLICK")){
-                    if(post.getListComment() != null){
-                        CommentAdapterLv adapter = new CommentAdapterLv(activity,post.getListComment());
-                        viewHolder.lvComment.setAdapter(adapter);
-                        viewHolder.tvViewAll.setTag("CLICKED");
-                    }
-                }else{
-                    viewHolder.lvComment.setAdapter(null);
-                    viewHolder.tvViewAll.setTag("NON_CLICK");
-                }
-
-            }
-        });
         return convertView;
     }
 
     private static class ViewHolder{
         ImageView imgProfile, imgPostImage, imgLike, imgComment, imgSave;
-        TextView tvTotalLike, tvComment, tvDate, tvUsername, tvViewAll;
-        ListView lvComment;
+        TextView tvTotalLike, tvDate, tvUsername, tvDes;
     }
     private void _clickImgLike(long postId, ImageView imgLike, TextView tvLike){
         int id_imageLike = ((int)imgLike.getTag());

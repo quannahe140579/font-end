@@ -13,9 +13,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -33,15 +31,14 @@ import com.example.instademo.dto.UserDTO;
 import com.example.instademo.mapper.UserMapper;
 import com.example.instademo.model.User;
 import com.example.instademo.model.UserForm;
+import com.example.instademo.utils.LocalConst;
+import com.example.instademo.utils.LogedUser;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,17 +51,14 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText etFullName, etAddress, etBirthDate, etPhone;
     private ActivityResultLauncher launcher;
     private TextView tvChangeAvt;
-    private User user;
-
+    private Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
         initComponent();
         setOnClickBtn();
-        readUser();
-        if(user != null){
-            // filll data
+        if(LogedUser.logedUser != null){
             fillData();
         }
         launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
@@ -78,7 +72,7 @@ public class EditProfileActivity extends AppCompatActivity {
                             }
                             Uri uri = data.getData();
                             try {
-                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
                                 imgAvt.setImageBitmap(bitmap);
                             } catch (IOException e) {
                                 e.printStackTrace();
@@ -89,22 +83,27 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void fillData(){
-        etFullName.setText(user.getFullName());
-        etPhone.setText(user.getPhone());
-        etAddress.setText(user.getAddress());
-        etBirthDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(user.getDateOfBirth()));
-        Picasso.with(EditProfileActivity.this).load("http://192.168.1.5:8080/uploads/naq11.jpg")
+        etFullName.setText(LogedUser.logedUser.getFullName());
+        etPhone.setText(LogedUser.logedUser.getPhone());
+        etAddress.setText(LogedUser.logedUser.getAddress());
+        if(LogedUser.logedUser.getDateOfBirth() != null){
+            etBirthDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(LogedUser.logedUser.getDateOfBirth()));
+        }
+        Picasso.with(EditProfileActivity.this).load(LocalConst.URL + "/uploads/" + LogedUser.logedUser.getAvatar())
                 .placeholder(R.mipmap.ic_launcher).error(R.drawable.img_default)
                 .into(imgAvt);
+        if(LogedUser.logedUser.getListPos() != null){
+
+        }
     }
 
     void initComponent() {
-        imgAvt = findViewById(R.id.image_profile);
+        imgAvt = findViewById(R.id.img_post_add);
         btnSave = findViewById(R.id.btnSave);
-        etFullName = findViewById(R.id.etFullname);
+        etFullName = findViewById(R.id.et_content_post);
         etBirthDate = findViewById(R.id.etBirthdate);
         etPhone = findViewById(R.id.etPhone);
-        etAddress = findViewById(R.id.etAddress);
+        etAddress = findViewById(R.id.tv_username);
         imgClose = findViewById(R.id.close);
         tvChangeAvt = findViewById(R.id.txtChange);
     }
@@ -128,7 +127,7 @@ public class EditProfileActivity extends AppCompatActivity {
                 String birthDate = etBirthDate.getText().toString().trim();
                 String phone = etPhone.getText().toString().trim();
 
-                UserForm form = new UserForm(user.getUsername(),fullName,address,birthDate,phone,avt);
+                UserForm form = new UserForm(LogedUser.logedUser.getUsername(),fullName,address,birthDate,phone,avt);
                 sendUpdateRequest(form);
             }
         });
@@ -140,12 +139,20 @@ public class EditProfileActivity extends AppCompatActivity {
                 UserDTO userDTO = response.body();
                 if(userDTO != null){
                     Toast.makeText(EditProfileActivity.this,"Update successfully !", Toast.LENGTH_LONG).show();
-                    user = UserMapper._toModel(userDTO);
+                    User user = UserMapper._toModel(userDTO);
+
+                    LogedUser.logedUser.setFullName(user.getFullName());
+                    LogedUser.logedUser.setPhone(user.getPhone());
+                    LogedUser.logedUser.setAddress(user.getAddress());
+                    LogedUser.logedUser.setAvatar(user.getAvatar());
 
                     etFullName.setText(user.getFullName());
                     etPhone.setText(user.getPhone());
                     etAddress.setText(user.getAddress());
-                    etBirthDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(user.getDateOfBirth()));
+                    if(user.getDateOfBirth() != null){
+                        etBirthDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(user.getDateOfBirth()));
+                    }
+                    fillData();
                 }
             }
 
@@ -191,21 +198,5 @@ public class EditProfileActivity extends AppCompatActivity {
         bitmap.compress(Bitmap.CompressFormat.JPEG,80,stream);
         byte[] byteArray = stream.toByteArray();
         return byteArray;
-    }
-    private void readUser(){
-        Gson gson = new Gson();
-        SharedPreferences sharedPreferences = getSharedPreferences("users",MODE_PRIVATE);
-        String data = sharedPreferences.getString("user","");
-        if(!"".equals(data)){
-            UserDTO userDTO = gson.fromJson(data, UserDTO.class);
-            user = UserMapper._toModel(userDTO);
-        }
-    }
-    private void saveToDB(UserDTO userDTO){
-        Gson gson = new Gson();
-        SharedPreferences sharedPreferences = getSharedPreferences("users",MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString("user", gson.toJson(userDTO));
-        editor.commit();
     }
 }

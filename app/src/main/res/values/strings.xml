@@ -26,4 +26,6 @@
     <string name="phone">Phone</string>
     <string name="save">Save</string>
     <string name="view_all_comment">View all comments</string>
+    <string name="repassword">Re-Password</string>
+    <string name="sigupWithFb">Sign up with Facebook</string>
 </resources>

@@ -9,4 +9,5 @@ public class CommentDTO {
 	private String content;
 	private String friendName;
 	private String urlAvt;
+	private long friend_id;
 }

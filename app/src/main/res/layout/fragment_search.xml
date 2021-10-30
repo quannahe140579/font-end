@@ -18,7 +18,7 @@
             android:background="?android:attr/windowBackground">
 
             <EditText
-                android:id="@+id/search_bar"
+                android:id="@+id/tv_search"
                 android:layout_width="375dp"
                 android:layout_height="45dp"
                 android:layout_marginStart="10dp"
@@ -31,8 +31,8 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rc_listPost"
+    <ListView
+        android:id="@+id/lv_listFriend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/bar"

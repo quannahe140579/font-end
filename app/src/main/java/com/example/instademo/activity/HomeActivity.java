@@ -32,19 +32,14 @@ public class HomeActivity extends AppCompatActivity {
     private Fragment searchFragment;
     private Fragment notificationFragment;
     private Fragment profileFragment;
-
     private FrameLayout mainLayout;
-
-    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         initComponent();
         bottomNavigationView.setOnNavigationItemSelectedListener(navigationItemSelectedListener);
-        readUser();
         transaction.add(R.id.fragment_container, new HomeFragment()).commit();
     }
 
@@ -67,15 +62,6 @@ public class HomeActivity extends AppCompatActivity {
         transaction.addToBackStack(null);
         transaction.commit();
     }
-    private void readUser(){
-        if(LogedUser.logedUser != null){
-            user = LogedUser.logedUser;
-        }
-    }
-
-    public User getUser() {
-        return this.user;
-    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navigationItemSelectedListener =
             item -> {
@@ -84,13 +70,14 @@ public class HomeActivity extends AppCompatActivity {
                         replaceFragment(homeFragment);
                         break;
                     case R.id.nav_search:
+                        searchFragment = new SearchFragment();
                         replaceFragment(searchFragment);
                         break;
                     case R.id.nav_add:
-
                         startActivity(new Intent(HomeActivity.this, PostActivity.class));
                         break;
                     case R.id.nav_noti:
+                        notificationFragment = new NotificationFragment();
                         replaceFragment(notificationFragment);
                         break;
                     case R.id.nav_profile:

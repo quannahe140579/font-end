@@ -34,8 +34,8 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rc_listPost"
+    <ListView
+        android:id="@+id/lv_listFriend"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/bar" />
