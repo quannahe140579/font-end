@@ -207,16 +207,17 @@
                     android:src="@drawable/ic_save" />
 
             </LinearLayout>
+
             <GridView
+                android:id="@+id/gr_listFriend"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="386dp"
                 android:layout_below="@id/last_bar"
                 android:layout_margin="10dp"
                 android:columnWidth="100dp"
                 android:horizontalSpacing="10dp"
-                android:verticalSpacing="10dp"
                 android:numColumns="auto_fit"
-                android:id="@+id/gr_listFriend"/>
+                android:verticalSpacing="10dp" />
 
 
         </LinearLayout>

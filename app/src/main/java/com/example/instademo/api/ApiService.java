@@ -75,4 +75,7 @@ public interface ApiService {
 
     @GET("/api/users")
     Call<UserDTO> getUserByUsername(@Query("username") String username);
+
+    @PUT("/api/post/delete")
+    Call<Optional> deletePost(@Query("postId") long postId);
 }

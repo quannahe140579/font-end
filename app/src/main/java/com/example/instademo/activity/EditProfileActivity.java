@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -34,6 +36,7 @@ import com.example.instademo.model.UserForm;
 import com.example.instademo.utils.LocalConst;
 import com.example.instademo.utils.LogedUser;
 import com.google.gson.Gson;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
@@ -48,9 +51,9 @@ public class EditProfileActivity extends AppCompatActivity {
     private static final int MY_REQUEST_CODE = 10;
     private ImageView imgAvt, imgClose;
     private Button btnSave;
-    private EditText etFullName, etAddress, etBirthDate, etPhone;
+    private EditText etFullName, etAddress, etPhone;
     private ActivityResultLauncher launcher;
-    private TextView tvChangeAvt;
+    private TextView tvChangeAvt, tvBirthdate;
     private Bitmap bitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +90,10 @@ public class EditProfileActivity extends AppCompatActivity {
         etPhone.setText(LogedUser.logedUser.getPhone());
         etAddress.setText(LogedUser.logedUser.getAddress());
         if(LogedUser.logedUser.getDateOfBirth() != null){
-            etBirthDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(LogedUser.logedUser.getDateOfBirth()));
+            tvBirthdate.setText(new SimpleDateFormat("yyyy-MM-dd").format(LogedUser.logedUser.getDateOfBirth()));
         }
         Picasso.with(EditProfileActivity.this).load(LocalConst.URL + "/uploads/" + LogedUser.logedUser.getAvatar())
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .placeholder(R.mipmap.ic_launcher).error(R.drawable.img_default)
                 .into(imgAvt);
         if(LogedUser.logedUser.getListPos() != null){
@@ -101,7 +105,7 @@ public class EditProfileActivity extends AppCompatActivity {
         imgAvt = findViewById(R.id.img_post_add);
         btnSave = findViewById(R.id.btnSave);
         etFullName = findViewById(R.id.et_content_post);
-        etBirthDate = findViewById(R.id.etBirthdate);
+        tvBirthdate = findViewById(R.id.etBirthdate);
         etPhone = findViewById(R.id.etPhone);
         etAddress = findViewById(R.id.tv_username);
         imgClose = findViewById(R.id.close);
@@ -124,11 +128,25 @@ public class EditProfileActivity extends AppCompatActivity {
                 byte[] avt = _convertBitmapToByteArray(bitmap);
                 String fullName = etFullName.getText().toString().trim();
                 String address = etAddress.getText().toString().trim();
-                String birthDate = etBirthDate.getText().toString().trim();
+                String birthDate = tvBirthdate.getText().toString().trim();
                 String phone = etPhone.getText().toString().trim();
 
                 UserForm form = new UserForm(LogedUser.logedUser.getUsername(),fullName,address,birthDate,phone,avt);
                 sendUpdateRequest(form);
+            }
+        });
+        tvBirthdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(EditProfileActivity.this);
+                datePickerDialog.setOnDateSetListener(new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        String s = year + "-" + (month + 1) + "-" + dayOfMonth;
+                        tvBirthdate.setText(s);
+                    }
+                });
+                datePickerDialog.show();
             }
         });
     }
@@ -150,7 +168,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     etPhone.setText(user.getPhone());
                     etAddress.setText(user.getAddress());
                     if(user.getDateOfBirth() != null){
-                        etBirthDate.setText(new SimpleDateFormat("yyyy-MM-dd").format(user.getDateOfBirth()));
+                        tvBirthdate.setText(new SimpleDateFormat("yyyy-MM-dd").format(user.getDateOfBirth()));
                     }
                     fillData();
                 }

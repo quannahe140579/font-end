@@ -10,4 +10,5 @@ public class Comment implements Serializable {
 	private long post_id;
 	private String content;
 	private String friendName;
+	private String urlAvt;
 }

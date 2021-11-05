@@ -1,6 +1,7 @@
 package com.example.instademo.adapter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,8 +10,10 @@ import android.widget.TextView;
 
 import com.example.instademo.R;
 import com.example.instademo.model.Announce;
+import com.example.instademo.utils.LocalConst;
 import com.squareup.picasso.Picasso;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -55,11 +58,17 @@ public class NotifyAdapter extends BaseAdapter {
         }
         Announce notification = list.get(position);
         viewHolder.tvNotify.setText(notification.getTitle());
-        Picasso.with(activity).load(R.drawable.notification_icon).into(viewHolder.imgProfile);
+        Picasso.with(activity).load(LocalConst.URL + "/uploads/" + getUsername(notification.getTitle()) + ".jpg")
+                .error(R.drawable.ic_noti)
+                .into(viewHolder.imgProfile);
         return convertView;
     }
     private static class ViewHolder{
         TextView tvNotify;
         ImageView imgProfile;
+    }
+    private String getUsername(String content){
+        String[] list = content.trim().split(" ");
+        return list[0];
     }
 }

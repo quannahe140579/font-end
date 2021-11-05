@@ -56,7 +56,7 @@ public class HomeActivity extends AppCompatActivity {
         mainLayout = findViewById(R.id.fragment_container);
     }
 
-    private void replaceFragment(Fragment fragment) {
+    public void replaceFragment(Fragment fragment) {
         transaction = manager.beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
@@ -81,6 +81,7 @@ public class HomeActivity extends AppCompatActivity {
                         replaceFragment(notificationFragment);
                         break;
                     case R.id.nav_profile:
+                        profileFragment = new ProfileFragment();
                         replaceFragment(profileFragment);
                         break;
                 }

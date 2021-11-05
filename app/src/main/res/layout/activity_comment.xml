@@ -68,11 +68,13 @@
 
         <TextView
             android:id="@+id/tv_post_cmt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="62dp"
+            android:layout_height="23dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="5dp"
+            android:background="@drawable/btn_backgroud_pink"
+            android:gravity="center"
             android:text="POST"
             android:textColor="@color/colorPrimary" />
 

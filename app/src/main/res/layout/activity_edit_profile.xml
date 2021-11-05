@@ -95,12 +95,14 @@
             android:hint="@string/address"
             android:minHeight="48dp" />
 
-        <EditText
+        <TextView
             android:id="@+id/etBirthdate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_vertical"
             android:hint="@string/birthdate"
-            android:minHeight="48dp" />
+            android:minHeight="48dp"
+            android:textSize="18sp" />
 
         <EditText
             android:id="@+id/etPhone"
