@@ -41,7 +41,9 @@ import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -55,6 +57,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private ActivityResultLauncher launcher;
     private TextView tvChangeAvt, tvBirthdate;
     private Bitmap bitmap;
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,15 +93,12 @@ public class EditProfileActivity extends AppCompatActivity {
         etPhone.setText(LogedUser.logedUser.getPhone());
         etAddress.setText(LogedUser.logedUser.getAddress());
         if(LogedUser.logedUser.getDateOfBirth() != null){
-            tvBirthdate.setText(new SimpleDateFormat("yyyy-MM-dd").format(LogedUser.logedUser.getDateOfBirth()));
+            tvBirthdate.setText(sdf.format(LogedUser.logedUser.getDateOfBirth()));
         }
         Picasso.with(EditProfileActivity.this).load(LocalConst.URL + "/uploads/" + LogedUser.logedUser.getAvatar())
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .placeholder(R.mipmap.ic_launcher).error(R.drawable.img_default)
                 .into(imgAvt);
-        if(LogedUser.logedUser.getListPos() != null){
-
-        }
     }
 
     void initComponent() {
@@ -163,14 +163,16 @@ public class EditProfileActivity extends AppCompatActivity {
                     LogedUser.logedUser.setPhone(user.getPhone());
                     LogedUser.logedUser.setAddress(user.getAddress());
                     LogedUser.logedUser.setAvatar(user.getAvatar());
-
-                    etFullName.setText(user.getFullName());
-                    etPhone.setText(user.getPhone());
-                    etAddress.setText(user.getAddress());
-                    if(user.getDateOfBirth() != null){
-                        tvBirthdate.setText(new SimpleDateFormat("yyyy-MM-dd").format(user.getDateOfBirth()));
-                    }
+                    LogedUser.logedUser.setDateOfBirth(user.getDateOfBirth());
+//
+//                    etFullName.setText(user.getFullName());
+//                    etPhone.setText(user.getPhone());
+//                    etAddress.setText(user.getAddress());
+//                    if(user.getDateOfBirth() != null){
+//                        tvBirthdate.setText(sdf.format(user.getDateOfBirth()));
+//                    }
                     fillData();
+                    //finish();
                 }
             }
 

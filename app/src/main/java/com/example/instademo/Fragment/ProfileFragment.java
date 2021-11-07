@@ -27,7 +27,11 @@ import com.example.instademo.R;
 import com.example.instademo.activity.EditProfileActivity;
 import com.example.instademo.activity.LoginActivity;
 import com.example.instademo.adapter.ImageAdapter;
+import com.example.instademo.api.ApiService;
+import com.example.instademo.dto.UserDTO;
+import com.example.instademo.mapper.UserMapper;
 import com.example.instademo.model.Post;
+import com.example.instademo.model.User;
 import com.example.instademo.utils.LocalConst;
 import com.example.instademo.utils.LogedUser;
 import com.squareup.picasso.Picasso;
@@ -37,6 +41,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,6 +67,8 @@ public class ProfileFragment extends Fragment {
     private String mParam2;
     private Intent intent;
     private Activity activity;
+    private int type;
+    private String username = "";
 
     public ProfileFragment() {
 
@@ -82,11 +91,14 @@ public class ProfileFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        type = getArguments().getInt("type");
+        username = getArguments().getString("username");
         return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 
@@ -125,37 +137,68 @@ public class ProfileFragment extends Fragment {
         imgOptions = view.findViewById(R.id.options);
         gvImage = view.findViewById(R.id.gr_listFriend);
 
-        List<Post> listPost = LogedUser.logedUser.getListPos();
-        if(listPost != null){
-            List<String> listImg = new ArrayList<>();
-            for (Post p: listPost
-                 ) {
-                listImg.add(p.getListImage().get(0).getName());
+        if(type == 0){
+            List<Post> listPost = LogedUser.logedUser.getListPos();
+            if(listPost != null){
+                List<String> listImg = new ArrayList<>();
+                for (Post p: listPost
+                ) {
+                    listImg.add(p.getListImage().get(0).getName());
+                }
+                ImageAdapter adapter = new ImageAdapter(getActivity(),listImg);
+                gvImage.setAdapter(adapter);
             }
-            ImageAdapter adapter = new ImageAdapter(getActivity(),listImg);
-            gvImage.setAdapter(adapter);
+            setOnClickForBtn();
+            fillDate(LogedUser.logedUser);
+            registerForContextMenu(imgOptions);
+        }else{
+            if(!"".equals(username)){
+                btnEditProfile.setVisibility(View.INVISIBLE);
+                ApiService.apiService.getUserByUsername(username).enqueue(new Callback<UserDTO>() {
+                    @Override
+                    public void onResponse(Call<UserDTO> call, Response<UserDTO> response) {
+                        UserDTO dto = response.body();
+                        User u = UserMapper._toModel(dto);
+                        List<Post> listPost = u.getListPos();
+                        if(listPost != null){
+                            List<String> listImg = new ArrayList<>();
+                            for (Post p: listPost
+                            ) {
+                                listImg.add(p.getListImage().get(0).getName());
+                            }
+                            ImageAdapter adapter = new ImageAdapter(getActivity(),listImg);
+                            gvImage.setAdapter(adapter);
+                        }
+                        setOnClickForBtn();
+                        fillDate(u);
+                        registerForContextMenu(imgOptions);
+                    }
+
+                    @Override
+                    public void onFailure(Call<UserDTO> call, Throwable t) {
+
+                    }
+                });
+            }
         }
-        setOnClickForBtn();
-        fillDate();
-        registerForContextMenu(imgOptions);
     }
 
-    private void fillDate() {
-        tvUsername.setText(LogedUser.logedUser.getUsername());
-        tvFullName.setText(LogedUser.logedUser.getFullName());
+    private void fillDate(User user) {
+        tvUsername.setText(user.getUsername());
+        tvFullName.setText(user.getFullName());
         Picasso.with(getActivity())
-                .load(LocalConst.URL + "/uploads/" + LogedUser.logedUser.getAvatar())
+                .load(LocalConst.URL + "/uploads/" + user.getAvatar())
                 .error(R.drawable.icon_defaul_account)
                 .into(circleImageView);
-        if(LogedUser.logedUser.getListFriend() != null){
-            tvNumberFollowing.setText(LogedUser.logedUser.getListFriend().size() + "");
+        if(user.getListFriend() != null){
+            tvNumberFollowing.setText(user.getListFriend().size() + "");
         }
-        if(LogedUser.logedUser.getListPos() != null){
-            tvNumberPost.setText(LogedUser.logedUser.getListPos().size() + "");
+        if(user.getListPos() != null){
+            tvNumberPost.setText(user.getListPos().size() + "");
         }
         tvNumberFollower.setText("0");
-        if(LogedUser.logedUser.getDateOfBirth() != null){
-            tvIntro.setText(sdf.format(LogedUser.logedUser.getDateOfBirth()));
+        if(user.getDateOfBirth() != null){
+            tvIntro.setText(sdf.format(user.getDateOfBirth()));
         }else{
             tvIntro.setText("Please update your information");
         }

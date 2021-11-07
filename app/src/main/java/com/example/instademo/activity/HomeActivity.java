@@ -81,7 +81,10 @@ public class HomeActivity extends AppCompatActivity {
                         replaceFragment(notificationFragment);
                         break;
                     case R.id.nav_profile:
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("type",0);
                         profileFragment = new ProfileFragment();
+                        profileFragment.setArguments(bundle);
                         replaceFragment(profileFragment);
                         break;
                 }

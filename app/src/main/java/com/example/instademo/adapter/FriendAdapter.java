@@ -2,6 +2,7 @@ package com.example.instademo.adapter;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -9,7 +10,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.instademo.Fragment.ProfileFragment;
 import com.example.instademo.R;
+import com.example.instademo.activity.HomeActivity;
 import com.example.instademo.api.ApiService;
 import com.example.instademo.model.Friend;
 import com.example.instademo.utils.LocalConst;
@@ -68,6 +71,21 @@ public class FriendAdapter extends BaseAdapter {
                 .load(LocalConst.URL + "/uploads/" + friend.getUrlAvt())
                 .error(R.drawable.icon_defaul_account)
                 .into(viewHolder.imgAvt);
+        viewHolder.imgAvt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Friend f = list.get(position);
+                if(f != null){
+                    Bundle bundle = new Bundle();
+                    bundle.putString("username",f.getUsername());
+                    bundle.putInt("type",1);
+                    ProfileFragment profileFragment = new ProfileFragment();
+                    profileFragment.setArguments(bundle);
+                    HomeActivity activity1 = (HomeActivity) activity;
+                    activity1.replaceFragment(profileFragment);
+                }
+            }
+        });
         if (isFriend(friend.getId())) {
             viewHolder.btnFollow.setText("UNFOLLOW");
             viewHolder.btnFollow.setBackgroundColor(Color.GRAY);

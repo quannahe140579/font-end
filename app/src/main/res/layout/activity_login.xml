@@ -44,6 +44,7 @@
 
     <EditText
         android:id="@+id/edPassword"
+        android:inputType="textPassword"
         android:layout_width="310dp"
         android:layout_height="44dp"
         android:layout_marginStart="25dp"
@@ -53,7 +54,6 @@
         android:background="@drawable/edit_text"
         android:ems="10"
         android:hint="@string/password"
-        android:inputType="textPassword"
         android:paddingLeft="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

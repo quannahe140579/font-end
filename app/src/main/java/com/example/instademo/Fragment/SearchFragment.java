@@ -8,9 +8,11 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -18,6 +20,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.instademo.R;
+import com.example.instademo.activity.HomeActivity;
 import com.example.instademo.adapter.FriendAdapter;
 import com.example.instademo.api.ApiService;
 import com.example.instademo.dto.FriendDTO;
@@ -100,10 +103,13 @@ public class SearchFragment extends Fragment {
 
             }
         });
-//        imgAvt = view.findViewById(R.id.img_profile_cmt);
-//        tvUsername = view.findViewById(R.id.tvUserName);
-//        tvFullName = view.findViewById(R.id.tv_fullName);
-//        btnSearch = view.findViewById(R.id.btn_follow);
+        lvFriend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.i("Mess", "Awn roi ne");
+
+            }
+        });
         return view;
     }
 
@@ -121,7 +127,6 @@ public class SearchFragment extends Fragment {
                             i--;
                         }
                     }
-
                     FriendAdapter adapter = new FriendAdapter(getActivity(), listFr);
                     lvFriend.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
